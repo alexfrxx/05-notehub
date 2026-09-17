@@ -15,7 +15,7 @@ interface SearchNotesProps {
   perPage: number;
 }
 
-interface PostNotesProps {
+interface NotesProps {
   id: string;
   title: string;
   content: string;
@@ -63,8 +63,8 @@ export async function searchNotes({
   return response.data;
 }
 
-export async function postNotes(object: PostNote): Promise<PostNotesProps> {
-  const response = await axios.post<PostNotesProps>(
+export async function postNote(object: PostNote): Promise<NotesProps> {
+  const response = await axios.post<NotesProps>(
     `https://notehub-public.goit.study/api/notes`,
     object,
     {
@@ -73,5 +73,18 @@ export async function postNotes(object: PostNote): Promise<PostNotesProps> {
       }
     }
   );
+  return response.data;
+}
+
+export async function deleteNote(id: number): Promise<NotesProps> {
+  const response = await axios.delete<NotesProps>(
+    `https://notehub-public.goit.study/api/notes/${id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${key}`
+      }
+    }
+  );
+
   return response.data;
 }

@@ -4,7 +4,12 @@ import { useQuery } from '@tanstack/react-query';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import css from './App.module.css';
 import SearchBox from '../SearchBox/SearchBox';
-import { fetchNotes, searchNotes, postNotes } from '../../services/noteService';
+import {
+  fetchNotes,
+  searchNotes,
+  postNote,
+  deleteNote
+} from '../../services/noteService';
 import NoteList from '../NoteList/NoteList';
 import Pagination from '../Pagination/Pagination';
 import Modal from '../Modal/Modal';
@@ -48,21 +53,32 @@ function App() {
   const queryClient = useQueryClient();
 
   const postMutation = useMutation({
-    mutationFn: postNotes,
+    mutationFn: postNote,
     onSuccess: () => {
       console.log('Todo added');
       queryClient.invalidateQueries({
         queryKey: ['notes']
       });
       setIsModalOpen(false);
-    },
-    onError: () => {
-      console.log('Error');
     }
   });
 
   const createNote = (note: PostNote) => {
     postMutation.mutate(note);
+  };
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteNote,
+    onSuccess: () => {
+      console.log('Todo deleted');
+      queryClient.invalidateQueries({
+        queryKey: ['notes']
+      });
+    }
+  });
+
+  const deleteTask = (id: number) => {
+    deleteMutation.mutate(id);
   };
 
   return (
@@ -86,8 +102,12 @@ function App() {
       {postMutation.isError && (
         <p className={css.error}>Something went wrong, try again</p>
       )}
+      {deleteMutation.isPending && <p className={css.load}>Deleting todo...</p>}
+      {deleteMutation.isError && (
+        <p className={css.error}>Something went wrong, try again</p>
+      )}
       {isModalOpen && <Modal onClose={closeModal} onSubmit={createNote} />}
-      {data && <NoteList arr={data.notes} />}
+      {data && <NoteList arr={data.notes} onDelete={deleteTask} />}
     </div>
   );
 }
