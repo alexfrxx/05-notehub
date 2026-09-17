@@ -2,12 +2,14 @@ import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import css from './Modal.module.css';
 import NoteForm from '../NoteForm/NoteForm';
+import type { PostNote } from '../../types/note';
 
 interface ModalProps {
   onClose: () => void;
+  onSubmit: (note: PostNote) => void;
 }
 
-export default function Modal({ onClose }: ModalProps) {
+export default function Modal({ onClose, onSubmit }: ModalProps) {
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
       onClose();
@@ -37,7 +39,7 @@ export default function Modal({ onClose }: ModalProps) {
       aria-modal="true"
     >
       <div className={css.modal}>
-        <NoteForm cancelModal={onClose} />
+        <NoteForm cancelModal={onClose} onSubmitForm={onSubmit} />
       </div>
     </div>,
     document.body

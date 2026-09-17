@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import css from './App.module.css';
 import SearchBox from '../SearchBox/SearchBox';
-import { fetchNotes, searchNotes } from '../../services/noteService';
+import { fetchNotes, searchNotes, postNotes } from '../../services/noteService';
 import NoteList from '../NoteList/NoteList';
 import Pagination from '../Pagination/Pagination';
 import Modal from '../Modal/Modal';
+import type { PostNote } from '../../types/note';
 
 function App() {
   const [inputValue, setInputValue] = useState('');
@@ -43,6 +45,26 @@ function App() {
     }
   });
 
+  const queryClient = useQueryClient();
+
+  const postMutation = useMutation({
+    mutationFn: postNotes,
+    onSuccess: () => {
+      console.log('Todo added');
+      queryClient.invalidateQueries({
+        queryKey: ['notes']
+      });
+      setIsModalOpen(false);
+    },
+    onError: () => {
+      console.log('Error');
+    }
+  });
+
+  const createNote = (note: PostNote) => {
+    postMutation.mutate(note);
+  };
+
   return (
     <div className={css.app}>
       <header className={css.toolbar}>
@@ -60,7 +82,11 @@ function App() {
       </header>
       {isLoading && <p className={css.load}>Loading notes...</p>}
       {isError && <p className={css.error}>Something went wrong, try again</p>}
-      {isModalOpen && <Modal onClose={closeModal} />}
+      {postMutation.isPending && <p className={css.load}>Adding todo...</p>}
+      {postMutation.isError && (
+        <p className={css.error}>Something went wrong, try again</p>
+      )}
+      {isModalOpen && <Modal onClose={closeModal} onSubmit={createNote} />}
       {data && <NoteList arr={data.notes} />}
     </div>
   );

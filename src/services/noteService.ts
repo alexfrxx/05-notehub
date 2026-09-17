@@ -1,5 +1,6 @@
 import axios from 'axios';
 import type Note from '../types/note';
+import type { PostNote } from '../types/note';
 
 const key = import.meta.env.VITE_API_KEY;
 
@@ -12,6 +13,13 @@ interface SearchNotesProps {
   search?: string;
   page: number;
   perPage: number;
+}
+
+interface PostNotesProps {
+  id: string;
+  title: string;
+  content: string;
+  tag: string;
 }
 
 export async function fetchNotes({
@@ -52,5 +60,18 @@ export async function searchNotes({
     }
   );
   console.log(response.data.notes);
+  return response.data;
+}
+
+export async function postNotes(object: PostNote): Promise<PostNotesProps> {
+  const response = await axios.post<PostNotesProps>(
+    `https://notehub-public.goit.study/api/notes`,
+    object,
+    {
+      headers: {
+        Authorization: `Bearer ${key}`
+      }
+    }
+  );
   return response.data;
 }

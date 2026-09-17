@@ -22,7 +22,6 @@ export default function Pagination({
   setCurrentPage,
   force
 }: PaginationProps) {
-  console.log(pageCount);
   return (
     <ReactPaginate
       pageCount={pageCount}
