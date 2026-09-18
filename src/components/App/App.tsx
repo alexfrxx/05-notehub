@@ -95,7 +95,9 @@ function App() {
       {deleteMutation.isError && (
         <p className={css.error}>Something went wrong, try again</p>
       )}
-      {/* {isModalOpen && <Modal onClose={closeModal} onSubmit={createNote} />} */}
+      {isModalOpen && (
+        <Modal onClose={closeModal} onSubmit={createNote} children />
+      )}
       {data && data.notes.length > 1 && (
         <NoteList arr={data.notes} onDelete={deleteTask} />
       )}
