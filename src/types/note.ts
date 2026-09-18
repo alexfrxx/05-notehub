@@ -1,7 +1,7 @@
 export interface Note {
   id: string;
   title: string;
-  content: string | null;
+  content: string;
   createdAt: string;
   updatedAt: string;
   tag: TagProps;
@@ -10,7 +10,7 @@ export interface Note {
 export interface PostNote {
   title: string;
   content: string;
-  tag: string;
+  tag: TagProps;
 }
 
 export type TagProps = 'Todo' | 'Work' | 'Personal' | 'Meeting' | 'Shopping';

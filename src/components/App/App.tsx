@@ -104,8 +104,8 @@ function App() {
           />
         </Modal>
       )}
-      {data && data.notes.length > 1 && (
-        <NoteList arr={data.notes} onDelete={deleteTask} />
+      {data && data.notes.length > 0 && (
+        <NoteList notes={data.notes} onDelete={deleteTask} />
       )}
     </div>
   );

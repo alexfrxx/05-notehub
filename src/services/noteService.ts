@@ -23,6 +23,7 @@ export async function fetchNotes({
     `https://notehub-public.goit.study/api/notes`,
     {
       params: {
+        search,
         page,
         perPage
       },
