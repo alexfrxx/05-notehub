@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { Note, PostNote } from '../types/note';
 
-const key = import.meta.env.VITE_API_KEY;
+const key = import.meta.env.VITE_NOTEHUB_TOKEN;
 
 interface FetchNotesProps {
   notes: Note[];

@@ -1,12 +1,13 @@
 import { Formik, Form, Field, type FormikHelpers, ErrorMessage } from 'formik';
 import { useId } from 'react';
 import * as Yup from 'yup';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { postNote } from '../../services/noteService';
 import css from './NoteForm.module.css';
-import type { PostNote, TagProps } from '../../types/note';
+import type { TagProps } from '../../types/note';
 
 interface NoteFormProps {
   cancelModal: () => void;
-  onSubmitForm: (note: PostNote) => void;
 }
 
 interface FormValues {
@@ -29,14 +30,25 @@ const FormSchema = Yup.object().shape({
     .required()
 });
 
-export default function NoteForm({ cancelModal, onSubmitForm }: NoteFormProps) {
+export default function NoteForm({ cancelModal }: NoteFormProps) {
+  const queryClient = useQueryClient();
   const id = useId();
+
+  const mutation = useMutation({
+    mutationFn: postNote,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['notes']
+      });
+      cancelModal();
+    }
+  });
 
   const handleSubmit = (
     values: FormValues,
     actions: FormikHelpers<FormValues>
   ) => {
-    onSubmitForm(values);
+    mutation.mutate(values);
     actions.resetForm();
   };
 
