@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { Note, PostNote, TagProps } from '../types/note';
+import type { Note, PostNote } from '../types/note';
 
 const key = import.meta.env.VITE_API_KEY;
 
