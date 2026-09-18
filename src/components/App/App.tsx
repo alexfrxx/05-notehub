@@ -9,6 +9,7 @@ import NoteList from '../NoteList/NoteList';
 import Pagination from '../Pagination/Pagination';
 import Modal from '../Modal/Modal';
 import type { PostNote } from '../../types/note';
+import NoteForm from '../NoteForm/NoteForm';
 
 function App() {
   const [inputValue, setInputValue] = useState('');
@@ -96,7 +97,12 @@ function App() {
         <p className={css.error}>Something went wrong, try again</p>
       )}
       {isModalOpen && (
-        <Modal onClose={closeModal} onSubmit={createNote} children />
+        <Modal onClose={closeModal}>
+          <NoteForm
+            cancelModal={() => setIsModalOpen(false)}
+            onSubmitForm={createNote}
+          />
+        </Modal>
       )}
       {data && data.notes.length > 1 && (
         <NoteList arr={data.notes} onDelete={deleteTask} />
