@@ -2,7 +2,7 @@ import { Formik, Form, Field, type FormikHelpers, ErrorMessage } from 'formik';
 import { useId } from 'react';
 import * as Yup from 'yup';
 import css from './NoteForm.module.css';
-import type { PostNote } from '../../types/note';
+import type { PostNote, TagProps } from '../../types/note';
 
 interface NoteFormProps {
   cancelModal: () => void;
@@ -12,7 +12,7 @@ interface NoteFormProps {
 interface FormValues {
   title: string;
   content: string;
-  tag: string;
+  tag: TagProps;
 }
 
 const initialValues: FormValues = {

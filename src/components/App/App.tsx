@@ -1,15 +1,10 @@
 import { useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import css from './App.module.css';
 import SearchBox from '../SearchBox/SearchBox';
-import {
-  fetchNotes,
-  searchNotes,
-  postNote,
-  deleteNote
-} from '../../services/noteService';
+import { fetchNotes, postNote, deleteNote } from '../../services/noteService';
 import NoteList from '../NoteList/NoteList';
 import Pagination from '../Pagination/Pagination';
 import Modal from '../Modal/Modal';
@@ -35,19 +30,13 @@ function App() {
   const { data, isLoading, isError } = useQuery({
     queryKey: ['notes', inputValue, page],
     queryFn: () => {
-      if (!inputValue.trim()) {
-        return fetchNotes({
-          page,
-          perPage: 12
-        });
-      }
-
-      return searchNotes({
+      return fetchNotes({
         search: inputValue,
         page,
         perPage: 12
       });
-    }
+    },
+    placeholderData: keepPreviousData
   });
 
   const queryClient = useQueryClient();
@@ -77,7 +66,7 @@ function App() {
     }
   });
 
-  const deleteTask = (id: number) => {
+  const deleteTask = (id: string) => {
     deleteMutation.mutate(id);
   };
 
@@ -88,8 +77,8 @@ function App() {
         {data && data?.totalPages > 1 && (
           <Pagination
             pageCount={data.totalPages}
-            setCurrentPage={({ selected }) => setPage(selected + 1)}
-            force={page - 1}
+            onPageChange={({ selected }) => setPage(selected + 1)}
+            forcePage={page - 1}
           />
         )}
         <button className={css.button} onClick={() => setIsModalOpen(true)}>
@@ -106,8 +95,10 @@ function App() {
       {deleteMutation.isError && (
         <p className={css.error}>Something went wrong, try again</p>
       )}
-      {isModalOpen && <Modal onClose={closeModal} onSubmit={createNote} />}
-      {data && <NoteList arr={data.notes} onDelete={deleteTask} />}
+      {/* {isModalOpen && <Modal onClose={closeModal} onSubmit={createNote} />} */}
+      {data && data.notes.length > 1 && (
+        <NoteList arr={data.notes} onDelete={deleteTask} />
+      )}
     </div>
   );
 }

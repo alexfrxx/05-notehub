@@ -7,9 +7,10 @@ import type { PostNote } from '../../types/note';
 interface ModalProps {
   onClose: () => void;
   onSubmit: (note: PostNote) => void;
+  children: React.ReactNode;
 }
 
-export default function Modal({ onClose, onSubmit }: ModalProps) {
+export default function Modal({ onClose, onSubmit, children }: ModalProps) {
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
       onClose();

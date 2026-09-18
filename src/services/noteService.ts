@@ -1,6 +1,5 @@
 import axios from 'axios';
-import type Note from '../types/note';
-import type { PostNote } from '../types/note';
+import type { Note, PostNote, TagProps } from '../types/note';
 
 const key = import.meta.env.VITE_API_KEY;
 
@@ -15,14 +14,8 @@ interface SearchNotesProps {
   perPage: number;
 }
 
-interface NotesProps {
-  id: string;
-  title: string;
-  content: string;
-  tag: string;
-}
-
 export async function fetchNotes({
+  search,
   page,
   perPage
 }: SearchNotesProps): Promise<FetchNotesProps> {
@@ -41,30 +34,8 @@ export async function fetchNotes({
   return response.data;
 }
 
-export async function searchNotes({
-  search,
-  page,
-  perPage
-}: SearchNotesProps): Promise<FetchNotesProps> {
-  const response = await axios.get<FetchNotesProps>(
-    `https://notehub-public.goit.study/api/notes/`,
-    {
-      params: {
-        search,
-        page,
-        perPage
-      },
-      headers: {
-        Authorization: `Bearer ${key}`
-      }
-    }
-  );
-  console.log(response.data.notes);
-  return response.data;
-}
-
-export async function postNote(object: PostNote): Promise<NotesProps> {
-  const response = await axios.post<NotesProps>(
+export async function postNote(object: PostNote): Promise<Note> {
+  const response = await axios.post<Note>(
     `https://notehub-public.goit.study/api/notes`,
     object,
     {
@@ -76,8 +47,8 @@ export async function postNote(object: PostNote): Promise<NotesProps> {
   return response.data;
 }
 
-export async function deleteNote(id: number): Promise<NotesProps> {
-  const response = await axios.delete<NotesProps>(
+export async function deleteNote(id: string): Promise<Note> {
+  const response = await axios.delete<Note>(
     `https://notehub-public.goit.study/api/notes/${id}`,
     {
       headers: {

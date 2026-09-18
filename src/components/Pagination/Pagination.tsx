@@ -5,8 +5,8 @@ import css from './Pagination.module.css';
 
 interface PaginationProps {
   pageCount: number;
-  setCurrentPage: (selectedItem: { selected: number }) => void;
-  force: number;
+  onPageChange: (selectedItem: { selected: number }) => void;
+  forcePage: number;
 }
 
 type ModuleWithDefault<T> = { default: T };
@@ -19,20 +19,20 @@ const ReactPaginate = (
 
 export default function Pagination({
   pageCount,
-  setCurrentPage,
-  force
+  onPageChange,
+  forcePage
 }: PaginationProps) {
   return (
     <ReactPaginate
       pageCount={pageCount}
-      onPageChange={setCurrentPage}
+      onPageChange={onPageChange}
       pageRangeDisplayed={5}
       nextLabel="→"
       previousLabel="←"
       activeClassName={css.active}
       containerClassName={css.pagination}
       marginPagesDisplayed={1}
-      forcePage={force}
+      forcePage={forcePage}
     />
   );
 }

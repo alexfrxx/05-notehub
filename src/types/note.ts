@@ -1,10 +1,10 @@
-export default interface Note {
-  id: number;
+export interface Note {
+  id: string;
   title: string;
-  content: string;
+  content: string | null;
   createdAt: string;
   updatedAt: string;
-  tag: string;
+  tag: TagProps;
 }
 
 export interface PostNote {
@@ -12,3 +12,5 @@ export interface PostNote {
   content: string;
   tag: string;
 }
+
+export type TagProps = 'Todo' | 'Work' | 'Personal' | 'Meeting' | 'Shopping';
